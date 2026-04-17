@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindEase — Mental Health Chatbot</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">🧠 Mind<span>Ease</span></div>
+
+    <button class="nav-btn active" onclick="showSection('chat-section', this)">
+      <span class="icon">💬</span> Chat
+    </button>
+    <button class="nav-btn" onclick="showSection('exercises-section', this)">
+      <span class="icon">🧘</span> Exercises
+    </button>
+    <button class="nav-btn" onclick="showSection('journal-section', this)">
+      <span class="icon">📓</span> Journal
+    </button>
+    <button class="nav-btn" onclick="showSection('mood-section', this)">
+      <span class="icon">😊</span> Mood Tracker
+    </button>
+    <button class="nav-btn" onclick="showSection('companion-section', this)">
+      <span class="icon">🤖</span> My Companion
+    </button>
+
+    <hr class="sidebar-divider"/>
+
+    <div class="companion-card">
+      <div class="companion-avatar" id="sidebar-avatar">🧡</div>
+      <div class="companion-name" id="sidebar-name">Luna</div>
+      <div class="companion-status">Listening…</div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main-content">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">💬 Chat with Luna</div>
+      <div class="topbar-controls">
+        <select class="mode-select" id="mode-select">
+          <option value="friend">🤝 Supportive Friend</option>
+          <option value="motivator">💪 Strict Motivator</option>
+          <option value="therapist">🧘 Calm Therapist</option>
+          <option value="coach">🎯 Life Coach</option>
+        </select>
+        <button class="icon-btn" onclick="toggleDark()" title="Toggle Dark Mode">🌙</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════
+         CHAT SECTION
+    ════════════════════════════ -->
+    <div class="section active" id="chat-section" style="padding:0; overflow:hidden; display:flex; flex-direction:column;">
+
+      <div class="affirmation-banner" style="margin:16px 20px 0; flex-shrink:0;">
+        <div class="affirmation-icon">✨</div>
+        <div class="affirmation-text">
+          <strong>Today's Affirmation</strong>
+          <span id="affirmation-text">You are stronger than your stress.</span>
+        </div>
+      </div>
+
+      <div class="chat-area" id="chat-box">
+        <div class="message bot">
+          Hello! I'm <strong>Luna</strong>, your mental wellness companion. 💙 How are you feeling today?
+          <span class="timestamp" id="welcome-time"></span>
+        </div>
+      </div>
+
+      <div class="emergency-banner" id="emergency-banner" style="display:none; margin:0 20px 10px;">
+        <span class="emergency-icon">🆘</span>
+        <span>If you're in crisis, call <strong>iCall: 9152987821</strong> or <strong>Vandrevala Foundation: 1860-2662-345</strong> (India, 24/7)</span>
+      </div>
+
+      <div class="chat-input-area">
+        <input type="text" id="user-input" placeholder="Type or speak how you're feeling..." />
+        <button class="action-btn" id="mic-btn" title="Voice Input">🎤</button>
+        <button class="action-btn" id="tts-toggle" title="Toggle Voice">🔊</button>
+        <button class="action-btn" id="send-btn" title="Send">&#10148;</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════
+         EXERCISES SECTION
+    ════════════════════════════ -->
+    <div class="section" id="exercises-section">
+      <div class="section-title">🧘 Mental Wellness Exercises</div>
+
+      <div class="challenge-card">
+        <div class="challenge-icon">🌟</div>
+        <div class="challenge-text">
+          <strong>Today's Challenge</strong>
+          <span id="daily-challenge">Write down 3 things you are grateful for today.</span>
+        </div>
+      </div>
+
+      <div class="exercise-card" style="width:100%;">
+        <div class="card-icon">🫁</div>
+        <div class="card-title">4-4-4 Breathing Exercise</div>
+        <div class="card-desc">Inhale 4s → Hold 4s → Exhale 4s. Reduces stress instantly.</div>
+        <div class="breathing-container" id="breathing-container" style="display:none;">
+          <div class="breath-circle" id="breath-circle">Breathe</div>
+          <div class="breath-label" id="breath-label">Press Start</div>
+          <div class="breath-timer" id="breath-timer">4</div>
+        </div>
+        <button class="card-btn" id="breath-btn" onclick="toggleBreathing()">▶ Start Breathing</button>
+      </div>
+
+      <div class="exercise-grid">
+        <div class="exercise-card">
+          <div class="card-icon">🧠</div>
+          <div class="card-title">5-4-3-2-1 Grounding</div>
+          <div class="card-desc">Notice 5 things you see, 4 you hear, 3 you touch, 2 you smell, 1 you taste.</div>
+          <button class="card-btn" onclick="speakText('Notice 5 things you can see. 4 things you can hear. 3 things you can touch. 2 things you can smell. And 1 thing you can taste. You are grounded and safe.')">🔊 Guide Me</button>
+        </div>
+        <div class="exercise-card">
+          <div class="card-icon">🌊</div>
+          <div class="card-title">Body Scan Meditation</div>
+          <div class="card-desc">Close your eyes. Slowly scan from head to toe, releasing tension at each point.</div>
+          <button class="card-btn" onclick="speakText('Close your eyes. Take a deep breath. Relax your forehead, your jaw, your shoulders, your chest, your belly, your legs, your feet. You are completely relaxed.')">🔊 Guide Me</button>
+        </div>
+        <div class="exercise-card">
+          <div class="card-icon">☀️</div>
+          <div class="card-title">Morning Affirmations</div>
+          <div class="card-desc">Start your day with powerful positive statements to boost confidence.</div>
+          <button class="card-btn" onclick="readAffirmations()">🔊 Play All</button>
+        </div>
+        <div class="exercise-card">
+          <div class="card-icon">💤</div>
+          <div class="card-title">Sleep Wind-Down</div>
+          <div class="card-desc">A calming routine to help you relax and drift into peaceful sleep.</div>
+          <button class="card-btn" onclick="speakText('Lie down comfortably. Close your eyes. Take 3 slow deep breaths. Let go of today. You are safe. You are calm. Drift into peaceful sleep.')">🔊 Guide Me</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════
+         JOURNAL SECTION
+    ════════════════════════════ -->
+    <div class="section" id="journal-section">
+      <div class="section-title">📓 Gratitude Journal</div>
+      <div class="journal-box">
+        <div class="journal-prompt" id="journal-prompt">What made you smile today?</div>
+        <textarea class="journal-textarea" id="journal-entry" placeholder="Write your thoughts here…"></textarea>
+        <button class="card-btn" onclick="saveJournal()" style="align-self:flex-start;">💾 Save Entry</button>
+        <div id="journal-saved" style="font-size:0.82rem; color:var(--success); display:none;">✅ Entry saved!</div>
+      </div>
+      <div class="section-title" style="margin-top:8px;">📚 Past Entries</div>
+      <div id="past-entries" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+
+    <!-- ════════════════════════════
+         MOOD SECTION
+    ════════════════════════════ -->
+    <div class="section" id="mood-section">
+      <div class="section-title">😊 How are you feeling today?</div>
+      <div class="exercise-card" style="width:100%; align-items:flex-start;">
+        <div class="mood-row">
+          <button class="mood-btn" onclick="selectMood(this,'😄','Happy')">😄</button>
+          <button class="mood-btn" onclick="selectMood(this,'😌','Calm')">😌</button>
+          <button class="mood-btn" onclick="selectMood(this,'😟','Anxious')">😟</button>
+          <button class="mood-btn" onclick="selectMood(this,'😢','Sad')">😢</button>
+          <button class="mood-btn" onclick="selectMood(this,'😠','Angry')">😠</button>
+          <button class="mood-btn" onclick="selectMood(this,'😴','Tired')">😴</button>
+          <button class="mood-btn" onclick="selectMood(this,'😰','Stressed')">😰</button>
+          <button class="mood-btn" onclick="selectMood(this,'🥰','Grateful')">🥰</button>
+        </div>
+        <div id="mood-feedback" style="margin-top:14px; font-size:0.9rem; color:var(--text-light);"></div>
+      </div>
+      <div class="section-title">📈 Mood History</div>
+      <div id="mood-history" style="display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+
+    <!-- ════════════════════════════
+         COMPANION SECTION
+    ════════════════════════════ -->
+    <div class="section" id="companion-section">
+      <div class="section-title">🤖 Customize Your Companion</div>
+      <div class="companion-setup">
+        <div>
+          <div class="setup-label">Choose Avatar</div>
+          <div class="avatar-picker" id="avatar-picker">
+            <span class="avatar-option selected" onclick="pickAvatar(this,'🧡')">🧡</span>
+            <span class="avatar-option" onclick="pickAvatar(this,'🤖')">🤖</span>
+            <span class="avatar-option" onclick="pickAvatar(this,'🧸')">🧸</span>
+            <span class="avatar-option" onclick="pickAvatar(this,'🦋')">🦋</span>
+            <span class="avatar-option" onclick="pickAvatar(this,'🌸')">🌸</span>
+            <span class="avatar-option" onclick="pickAvatar(this,'⭐')">⭐</span>
+            <span class="avatar-option" onclick="pickAvatar(this,'🐼')">🐼</span>
+            <span class="avatar-option" onclick="pickAvatar(this,'🌻')">🌻</span>
+          </div>
+        </div>
+        <div>
+          <div class="setup-label">Bot Name</div>
+          <input class="setup-input" id="bot-name-input" type="text" placeholder="e.g. Luna, Aria, Max" value="Luna"/>
+        </div>
+        <div>
+          <div class="setup-label">Voice Tone</div>
+          <select class="setup-select" id="voice-tone">
+            <option value="calm">🌊 Calm & Soft</option>
+            <option value="energetic">⚡ Energetic</option>
+            <option value="warm">🌸 Warm & Friendly</option>
+          </select>
+        </div>
+        <button class="card-btn" onclick="saveCompanion()" style="align-self:flex-start; margin-top:4px;">💾 Save Companion</button>
+        <div id="companion-saved" style="font-size:0.82rem; color:var(--success); display:none;">✅ Companion saved!</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── Data ──
+const affirmations = [
+  "You are stronger than your stress.",
+  "You are enough, just as you are.",
+  "Every day is a fresh start.",
+  "You have survived 100% of your bad days.",
+  "Small steps still move you forward.",
+  "Your feelings are valid.",
+  "You deserve peace and happiness.",
+  "Breathe. You've got this."
+];
+const challenges = [
+  "Write down 3 things you are grateful for today.",
+  "Take a 10-minute walk outside.",
+  "Drink 8 glasses of water today.",
+  "Call or message someone you care about.",
+  "Spend 5 minutes in silence — no phone.",
+  "Do one kind thing for yourself today.",
+  "Write down one thing you're proud of.",
+];
+const journalPrompts = [
+  "What made you smile today?",
+  "What is one thing you're grateful for right now?",
+  "Describe a moment today when you felt at peace.",
+  "What is one challenge you overcame this week?",
+  "Write a kind message to your future self.",
+  "What are 3 things that bring you joy?",
+  "What do you need more of in your life?",
+];
+const moodMessages = {
+  'Happy':    "That's wonderful! Keep spreading that positivity! 🌟",
+  'Calm':     "Peace of mind is a gift. Cherish it. 🌿",
+  'Anxious':  "It's okay to feel anxious. Try the 4-4-4 breathing exercise. 🫁",
+  'Sad':      "It's okay to feel sad. I'm here for you. 💙",
+  'Angry':    "Take a deep breath. Your feelings are valid. 🌊",
+  'Tired':    "Rest is productive too. Be kind to yourself. 😴",
+  'Stressed': "You're doing your best. Try a short breathing exercise. 💆",
+  'Grateful': "Gratitude is powerful! You're on the right path. 🥰"
+};
+const modeResponses = {
+  friend:     "I'm here for you. 💙 ",
+  motivator:  "You've handled worse. Let's move forward. 💪 ",
+  therapist:  "I hear you. Let's explore this together. 🌿 ",
+  coach:      "Let's identify the next small step. 🎯 "
+};
+const distressWords = ["suicide","kill myself","end my life","hopeless","can't go on","worthless","harm myself"];
+
+// ── Init ──
+const dayIndex = new Date().getDay();
+document.getElementById("affirmation-text").textContent = affirmations[dayIndex % affirmations.length];
+document.getElementById("daily-challenge").textContent  = challenges[dayIndex % challenges.length];
+document.getElementById("journal-prompt").textContent   = journalPrompts[dayIndex % journalPrompts.length];
+document.getElementById("welcome-time").textContent     = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+// ── Dark Mode ──
+function toggleDark() {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark", document.body.classList.contains("dark"));
+}
+if (localStorage.getItem("dark") === "true") document.body.classList.add("dark");
+
+// ── Section Navigation ──
+function showSection(id, btn) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
+  const titles = {
+    'chat-section':      '💬 Chat with ' + (localStorage.getItem("botName") || "Luna"),
+    'exercises-section': '🧘 Mental Exercises',
+    'journal-section':   '📓 Gratitude Journal',
+    'mood-section':      '😊 Mood Tracker',
+    'companion-section': '🤖 My Companion'
+  };
+  document.getElementById("topbar-title").textContent = titles[id];
+}
+
+// ── TTS ──
+let ttsEnabled = true;
+document.getElementById("tts-toggle").addEventListener("click", () => {
+  ttsEnabled = !ttsEnabled;
+  document.getElementById("tts-toggle").textContent = ttsEnabled ? "🔊" : "🔇";
+  document.getElementById("tts-toggle").classList.toggle("muted", !ttsEnabled);
+});
+
+function speakText(text) {
+  if (!ttsEnabled || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang  = "en-IN";
+  const tone  = localStorage.getItem("voiceTone") || "calm";
+  utter.rate  = tone === "energetic" ? 1.15 : 0.92;
+  utter.pitch = tone === "warm" ? 1.2 : 1.0;
+  window.speechSynthesis.speak(utter);
+}
+
+function readAffirmations() { speakText(affirmations.join(". ")); }
+
+// ── Voice Input ──
+let isRecording = false;
+const micBtn = document.getElementById("mic-btn");
+
+if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SR();
+  recognition.lang = "en-IN";
+  recognition.interimResults = false;
+
+  recognition.onresult = (e) => {
+    document.getElementById("user-input").value = e.results[0][0].transcript;
+    stopRecording(); sendMessage();
+  };
+  recognition.onerror = () => stopRecording();
+  recognition.onend   = () => stopRecording();
+
+  micBtn.addEventListener("click", () => {
+    if (isRecording) { recognition.stop(); stopRecording(); }
+    else { recognition.start(); isRecording = true; micBtn.classList.add("recording"); micBtn.textContent = "⏹"; }
+  });
+} else {
+  micBtn.disabled = true; micBtn.style.opacity = "0.4";
+}
+
+function stopRecording() {
+  isRecording = false;
+  micBtn.classList.remove("recording");
+  micBtn.textContent = "🎤";
+}
+
+// ── Chat ──
+function getTime() {
+  return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+function appendMessage(role, text) {
+  const chatBox = document.getElementById("chat-box");
+  const div = document.createElement("div");
+  div.className = "message " + role;
+  div.innerHTML = text + `<span class="timestamp">${getTime()}</span>`;
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+async function sendMessage() {
+  const input   = document.getElementById("user-input");
+  const message = input.value.trim();
+  if (!message) return;
+  appendMessage("user", message);
+  input.value = "";
+
+  const lowerMsg = message.toLowerCase();
+  document.getElementById("emergency-banner").style.display =
+    distressWords.some(w => lowerMsg.includes(w)) ? "flex" : "none";
+
+  const chatBox  = document.getElementById("chat-box");
+  const typing   = document.createElement("div");
+  typing.className = "typing-indicator";
+  typing.id = "typing";
+  typing.innerHTML = "<span></span><span></span><span></span>";
+  chatBox.appendChild(typing);
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  try {
+    const mode   = document.getElementById("mode-select").value;
+    const prefix = modeResponses[mode] || "";
+    const res    = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
+    });
+    const data  = await res.json();
+    document.getElementById("typing").remove();
+    const reply = prefix + (data.response || data.error || "Something went wrong.");
+    appendMessage("bot", reply);
+    speakText(reply);
+  } catch (err) {
+    document.getElementById("typing").remove();
+    appendMessage("bot", "Server error. Please try again.");
+  }
+}
+
+document.getElementById("send-btn").addEventListener("click", sendMessage);
+document.getElementById("user-input").addEventListener("keydown", e => {
+  if (e.key === "Enter") sendMessage();
+});
+
+// ── Breathing Exercise ──
+let breathRunning = false;
+let breathInterval = null;
+
+function toggleBreathing() {
+  if (breathRunning) {
+    clearInterval(breathInterval);
+    breathRunning = false;
+    document.getElementById("breath-btn").textContent = "▶ Start Breathing";
+    document.getElementById("breathing-container").style.display = "none";
+    document.getElementById("breath-circle").className = "breath-circle";
+  } else {
+    breathRunning = true;
+    document.getElementById("breath-btn").textContent = "⏹ Stop";
+    document.getElementById("breathing-container").style.display = "flex";
+    runBreathCycle();
+  }
+}
+
+function runBreathCycle() {
+  const phases = [
+    { label:"Inhale", duration:4, cls:"inhale" },
+    { label:"Hold",   duration:4, cls:""       },
+    { label:"Exhale", duration:4, cls:"exhale" }
+  ];
+  let phaseIndex = 0, count = phases[0].duration;
+
+  function tick() {
+    if (!breathRunning) return;
+    const p = phases[phaseIndex];
+    document.getElementById("breath-label").textContent      = p.label;
+    document.getElementById("breath-timer").textContent      = count;
+    document.getElementById("breath-circle").className       = "breath-circle " + p.cls;
+    document.getElementById("breath-circle").textContent     = p.label;
+    count--;
+    if (count < 0) { phaseIndex = (phaseIndex + 1) % phases.length; count = phases[phaseIndex].duration; }
+  }
+  tick();
+  breathInterval = setInterval(tick, 1000);
+}
+
+// ── Mood Tracker ──
+function selectMood(btn, emoji, label) {
+  document.querySelectorAll(".mood-btn").forEach(b => b.classList.remove("selected"));
+  btn.classList.add("selected");
+  document.getElementById("mood-feedback").innerHTML =
+    `<strong>${emoji} ${label}:</strong> ${moodMessages[label]}`;
+
+  const history = JSON.parse(localStorage.getItem("moodHistory") || "[]");
+  history.unshift({ emoji, label, time: new Date().toLocaleString() });
+  if (history.length > 10) history.pop();
+  localStorage.setItem("moodHistory", JSON.stringify(history));
+  renderMoodHistory();
+}
+
+function renderMoodHistory() {
+  const history = JSON.parse(localStorage.getItem("moodHistory") || "[]");
+  document.getElementById("mood-history").innerHTML = history.map(m =>
+    `<div style="background:var(--surface); padding:10px 16px; border-radius:12px; border:1px solid var(--border); font-size:0.85rem;">
+      <strong>${m.emoji} ${m.label}</strong>
+      <span style="color:var(--text-light); float:right;">${m.time}</span>
+    </div>`
+  ).join("");
+}
+renderMoodHistory();
+
+// ── Journal ──
+function saveJournal() {
+  const entry = document.getElementById("journal-entry").value.trim();
+  if (!entry) return;
+  const entries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
+  entries.unshift({ text: entry, time: new Date().toLocaleString(), prompt: document.getElementById("journal-prompt").textContent });
+  if (entries.length > 20) entries.pop();
+  localStorage.setItem("journalEntries", JSON.stringify(entries));
+  document.getElementById("journal-entry").value = "";
+  const saved = document.getElementById("journal-saved");
+  saved.style.display = "block";
+  setTimeout(() => saved.style.display = "none", 2000);
+  renderJournal();
+}
+
+function renderJournal() {
+  const entries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
+  document.getElementById("past-entries").innerHTML = entries.map(e =>
+    `<div style="background:var(--surface); padding:14px 18px; border-radius:14px; border:1px solid var(--border); font-size:0.85rem; line-height:1.6;">
+      <div style="color:var(--text-light); font-size:0.75rem; margin-bottom:4px;">📅 ${e.time} — <em>${e.prompt}</em></div>
+      <div>${e.text}</div>
+    </div>`
+  ).join("");
+}
+renderJournal();
+
+// ── Companion ──
+function pickAvatar(el, emoji) {
+  document.querySelectorAll(".avatar-option").forEach(a => a.classList.remove("selected"));
+  el.classList.add("selected");
+  localStorage.setItem("botAvatar", emoji);
+  document.getElementById("sidebar-avatar").textContent = emoji;
+}
+
+function saveCompanion() {
+  const name = document.getElementById("bot-name-input").value.trim() || "Luna";
+  const tone = document.getElementById("voice-tone").value;
+  localStorage.setItem("botName", name);
+  localStorage.setItem("voiceTone", tone);
+  document.getElementById("sidebar-name").textContent = name;
+  const saved = document.getElementById("companion-saved");
+  saved.style.display = "block";
+  setTimeout(() => saved.style.display = "none", 2000);
+}
+
+// ── Load Saved Settings on Start ──
+window.onload = () => {
+  const name   = localStorage.getItem("botName");
+  const avatar = localStorage.getItem("botAvatar");
+  if (name)   { document.getElementById("sidebar-name").textContent = name; document.getElementById("bot-name-input").value = name; }
+  if (avatar) { document.getElementById("sidebar-avatar").textContent = avatar; }
+};
+</script>
+</body>
+</html>
